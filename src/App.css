@@ -32,7 +32,12 @@
 /*  }*/
 /*}*/
 
-#card_drawer_container {
+#root {
   text-align: center;
-  alignment: center;
+  width: 100%;
+}
+
+#card_drawer_container {
+  margin: 0 auto;
+  width: 50em;
 }

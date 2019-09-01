@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {Button, Input} from 'antd';
+import 'antd/dist/antd.css';
 import './App.css';
 
 interface CardDrawerProps {
@@ -91,7 +93,14 @@ class CardDrawer extends Component<CardDrawerProps, CardDrawerState> {
     render() {
         return (
             <div id="card_drawer_container">
-                <button id="card_drawer_btn" onClick={ this.onClickButton.bind(this) } disabled={ this.state.isFetching }>抽卡</button>
+                <Button
+                    id="card_drawer_btn"
+                    onClick={ this.onClickButton.bind(this) }
+                    disabled={ this.state.isFetching }
+                    type="primary"
+                    block={ true }>
+                    抽卡
+                </Button>
                 <div id="card_drawer_text">
                     您获得了{ nameOfCard(this.levelOfNumber(this.state.randomNumber)) }
                 </div>
