@@ -18,7 +18,7 @@ class SignUpButton extends Component<SignUpBtnProps, SignUpBtnState> {
     render() {
         return (
             <div id="btn_root">
-                <Button onClick={() => { this.props.history.push("/ou_huang/signup" )}}>注册</Button>
+                <Button onClick={() => { this.props.history.push("/ou_huang/signin" )}}>登录</Button>
             </div>
         )
     }
