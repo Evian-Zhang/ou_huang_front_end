@@ -5,7 +5,7 @@
       <paths name="evian-linux-server">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/evian/Documents/web_root/ou_huang_frontend" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/evian/Documents/web_root/ou_huang_frontend" local="$PROJECT_DIR$/build" web="/" />
           </mappings>
         </serverdata>
       </paths>

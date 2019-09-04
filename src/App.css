@@ -41,3 +41,21 @@
   margin: 0 auto;
   width: 50em;
 }
+
+#card_drawer_body {
+  height: 50em;
+  margin-top: 15em;
+}
+
+#card_drawer_right {
+  height: 50em;
+  margin-top: 15em;
+}
+
+#card_drawer_left {
+  height: 50em;
+}
+
+#star_list {
+  list-style-type: none;
+}

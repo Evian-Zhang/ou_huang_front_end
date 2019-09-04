@@ -4,6 +4,7 @@ import SignUp from "./signup";
 import SignUpButton from "./SignUpButton";
 import SignIn from "./signin";
 import SignInButton from "./SignInButton";
+import App from "./App"
 
 interface MyRouterProps {
 
@@ -17,14 +18,13 @@ export default class MyRouter extends Component<MyRouterProps, MyRouterState> {
     constructor(props: MyRouterProps) {
         super(props)
 
-
     }
 
     render() {
         return (
             <Router>
                 <div>
-                    <Route exact path="/ou_huang" component={SignInButton}/>
+                    <Route exact path="/" component={App}/>
                     <Route path="/ou_huang/signup" component={SignUp} />
                     <Route path="/ou_huang/signin" component={SignIn} />
                 </div>

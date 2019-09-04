@@ -1,13 +1,12 @@
 import React, {ChangeEvent, Component} from 'react';
-import {Button, Form, Input, Alert} from 'antd';
+import {Button, Form, Input, message} from 'antd';
 import 'antd/dist/antd.css';
 import './App.css';
 import CryptoJs from "crypto-js";
 import ReactDOM from 'react-dom';
-import { withRouter, RouteComponentProps } from 'react-router-dom'
 
-interface SignUpProps extends RouteComponentProps {
-
+interface SignUpProps {
+    callbackParent: () => void
 }
 
 interface SignUpState {
@@ -56,7 +55,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
     }
 
     fetchIdAndKey() {
-        fetch('http://47.100.175.77:8081/ou_huang_get_key', {
+        fetch('http://47.100.175.77:8081/api/ou_huang_get_key', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -89,6 +88,11 @@ class SignUp extends Component<SignUpProps, SignUpState> {
             this.setState({
                 usernameStatus: "error",
                 usernameHelp: "用户名长度不得超过16个字符"
+            }, this.validateSubmitButton);
+        } else if (value.match("^[!:]+$")) {
+            this.setState({
+                usernameStatus: "error",
+                usernameHelp: "用户名不得包含字符':'"
             }, this.validateSubmitButton);
         } else {
             this.setState({
@@ -235,7 +239,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
 
         const data = {Sid: this.state.sid, Username: this.state.username, Password: this.encryptPassword()};
 
-        fetch('http://47.100.175.77:8081/ou_huang_sign_up', {
+        fetch('http://47.100.175.77:8081/api/ou_huang_sign_up', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -247,7 +251,6 @@ class SignUp extends Component<SignUpProps, SignUpState> {
             body: JSON.stringify(data),
         })
             .then(response => {
-                console.log(response);
                 if (response.ok) {
                     return response.json();
                 }
@@ -256,7 +259,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
             .then((data) => {
                 const isSuccess = data["Success"] as boolean;
                 if (isSuccess) {
-                    this.props.history.push("/ou_huang");
+                    this.props.callbackParent()
                 } else {
                     throw new Error(data["ErrorInfo"] as string);
                 }
@@ -265,9 +268,9 @@ class SignUp extends Component<SignUpProps, SignUpState> {
                 this.setState({
                     canSubmit: true,
                 });
-                ReactDOM.render(<Alert type="error" message={error.message}/>, document.getElementById("signupForm"));
+                message.error(error.message);
             })
     }
 }
 
-export default withRouter(SignUp);
+export default SignUp;

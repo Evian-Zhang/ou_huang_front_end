@@ -1,13 +1,11 @@
 import React, {ChangeEvent, Component} from 'react';
-import {Button, Form, Input, Alert} from 'antd';
+import {Button, Form, Input, Alert, message} from 'antd';
 import 'antd/dist/antd.css';
 import './App.css';
 import CryptoJs from "crypto-js";
-import ReactDOM from 'react-dom';
-import {withRouter, RouteComponentProps} from 'react-router-dom'
 
-interface SignInProps extends RouteComponentProps {
-
+interface SignInProps {
+    callbackParent: (username: string, hashedPass: string, uid: number, cookie: string, remain: number, levelOne: number, levelTwo: number, levelThree:number, levelFour: number, levelFive: number) => void
 }
 
 interface SignInState {
@@ -51,7 +49,7 @@ class SignIn extends Component<SignInProps, SignInState> {
     }
 
     fetchIdAndKey() {
-        fetch('http://47.100.175.77:8081/ou_huang_get_key', {
+        fetch('http://47.100.175.77:8081/api/ou_huang_get_key', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -180,21 +178,26 @@ class SignIn extends Component<SignInProps, SignInState> {
             canSubmit: false,
         });
 
-        const data = {Sid: this.state.sid, Username: this.state.username, Password: this.encryptPassword()};
+        const encryptedPassword = this.encryptPassword();
 
-        fetch('http://47.100.175.77:8081/ou_huang_sign_in', {
+        const data = {Sid: this.state.sid, Username: this.state.username, Password: encryptedPassword};
+
+        fetch('http://47.100.175.77:8081/api/ou_huang_sign_in', {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': '*',
+                'Access-Control-Expose-Headers': '*',
                 'Content-Type': 'text/plain',
-                'Accept': 'text/plain',
+                'Accept': '*',
             },
             mode: 'cors',
             cache: 'default',
             body: JSON.stringify(data),
+            credentials: 'include',
+
         })
             .then(response => {
-                console.log(response);
+                console.log(response.headers.get('set-cookie'));
                 if (response.ok) {
                     return response.json();
                 }
@@ -203,7 +206,17 @@ class SignIn extends Component<SignInProps, SignInState> {
             .then((data) => {
                 const isSuccess = data["Success"] as boolean;
                 if (isSuccess) {
-                    this.props.history.push("/ou_huang");
+                    // this.props.history.push("/ou_huang");
+                    this.props.callbackParent(data["Username"] as string,
+                        data["Password"] as string,
+                        data["Uid"] as number,
+                        data["Cookie"] as string,
+                        data["Remain"] as number,
+                        data["LevelOne"] as number,
+                        data["LevelTwo"] as number,
+                        data["LevelThree"] as number,
+                        data["LevelFour"] as number,
+                        data["LevelFive"] as number);
                 } else {
                     throw new Error(data["ErrorInfo"] as string);
                 }
@@ -212,9 +225,9 @@ class SignIn extends Component<SignInProps, SignInState> {
                 this.setState({
                     canSubmit: true,
                 });
-                ReactDOM.render(<Alert type="error" message={error.message}/>, document.getElementById("signinForm"));
+                message.error(error.message);
             })
     }
 }
 
-export default withRouter(SignIn);
+export default SignIn;
