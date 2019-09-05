@@ -128,7 +128,6 @@ class App extends Component<AppProps, AppState> {
             .then((data) => {
                 const isSuccess = data["Success"] as boolean;
                 if (isSuccess) {
-                    this.goToMainPage();
                     this.setState({
                         cookie: data["NewCookie"] as string,
                         canRegister: true,
@@ -140,6 +139,7 @@ class App extends Component<AppProps, AppState> {
                     } else {
                         message.error("您已签到")
                     }
+                    this.goToMainPage();
                 } else {
                     throw new Error(data["ErrorInfo"] as string);
                 }
@@ -246,7 +246,6 @@ class App extends Component<AppProps, AppState> {
             .then((data) => {
                 const isSuccess = data["Success"] as boolean;
                 if (isSuccess) {
-                    this.goToMainPage();
                     this.setState({
                         isLoggedIn: false,
                         accountMenuTitle: "登录/注册",
@@ -265,7 +264,8 @@ class App extends Component<AppProps, AppState> {
                         fourNumber: 0,
                         fiveNumber: 0,
                         fivePer: 0.0,
-                    })
+                    });
+                    this.goToMainPage();
                 } else {
                     throw new Error(data["ErrorInfo"] as string);
                 }
@@ -395,9 +395,6 @@ class App extends Component<AppProps, AppState> {
             <div className="App">
                 <Layout>
                     <Header>
-                      <div>
-                        <Typography.Title>我是欧皇</Typography.Title>
-                      </div>
                         <Menu
                             theme="dark"
                             mode="horizontal"
